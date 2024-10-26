@@ -1,158 +1,68 @@
-document.querySelector("#fetchBtnPerson").addEventListener("click", (event) => {
-  const id = event.target.getAttribute("data-id");
+const entities = {
+  people: {
+    nextUrl: "https://swapi.dev/api/people/",
+    container: "...", //DOM selector
+  },
+  planets: {
+    nextUrl: "https://swapi.dev/api/planets/",
+    container: "...", //DOM selector
+  },
+  starships: {
+    nextUrl: "https://swapi.dev/api/starships/",
+    container: "...", //DOM selector
+  },
+};
 
-  const page = event.target.getAttribute("data-page");
-  fetchPeople(page);
-});
+document
+  .querySelector("#fetchBtn_people")
+  .addEventListener("click", (event) => {
+    const entity = event.target.getAttribute("data-entity");
+    fetchEntity(entity);
+  });
 document.addEventListener("click", function (event) {
-  if (event.target.id === "fetchBtnPersonNext") {
-    const page = event.target.getAttribute("data-page");
-    fetchPeople(page);
-  }
-  if (event.target.id === "fetchBtnPlanetNext") {
-    const page = event.target.getAttribute("data-page");
-    fetchPlanet(page);
-  }
-  if (event.target.id === "fetchBtnStarShipsNext") {
-    const page = event.target.getAttribute("data-page");
-    fetchStarShips(page);
-  }
+  const ent = event.target.getAttribute("data-entity");
+  fetchEntity(ent);
 });
-
-function fetchPeople(page) {
-  fetch(`https://swapi.dev/api/people/?page=${page}`)
+function fetchEntity(entity) {
+  fetch(entities[entity].nextUrl)
     .then((res) => res.json())
-    .then((results) => {
-      const button = document.getElementById("fetchBtnPerson");
-      const url = results.next;
+    .then((data) => {
+      const button = document.getElementById(`fetchBtn_${entity}`);
+      entities[entity].nextUrl = data.next;
+      console.log(data);
 
-      // Create a URL object
-      const urlObj = new URL(url);
-
-      // Extract the 'page' query parameter using URLSearchParams
-      const page = urlObj.searchParams.get("page");
-
-      // console.log(page); // Outputs: 2
-
-      button.setAttribute("data-page", page); // Update the 'data-id' attribute
-
-      const allPeople = results.results;
+      const allResults = data.results;
       let rsp = "";
-      const personBox = document.querySelector("#personBox");
-      allPeople.forEach(function (person) {
+      const entityBox = document.querySelector("#entityBox");
+      allResults.forEach(function ({ name }) {
         rsp += `
         <div style="padding: 10px; margin-top: 10px;">
-          <div>Name: ${person.name}</div>
+          <div>Name: ${name}</div>
 
           </div>
       `;
-        console.log(person.name);
+        // console.log(ent);
       });
       rsp += `
     <div style="padding: 10px; margin-top: 10px;">
-      <button id="fetchBtnPersonNext"
-        class="btn btn-primary" data-page="${page}">Next</button>
-    
-
-      
-      
-    </div>
+      <button id="fetchBtn_${entity}_next"
+        class="btn btn-primary" data-entity="${entity}">Next</button>
+   </div>
   `;
 
-      personBox.innerHTML = rsp;
-      // console.log(results, allPeople);
-    });
-}
-
-function fetchPlanet(page) {
-  fetch(`https://swapi.dev/api/planets/?page=${page}`)
-    .then((res) => res.json())
-    .then((results) => {
-      const button = document.getElementById("fetchBtnPlanets");
-      const url = results.next;
-
-      const urlObj = new URL(url);
-
-      const page = urlObj.searchParams.get("page");
-
-      button.setAttribute("data-page", page);
-
-      const allPlanets = results.results;
-      let rsp = "";
-      const personBox = document.querySelector("#personBox");
-      allPlanets.forEach(function (planet) {
-        rsp += `
-      <div style="padding: 10px; margin-top: 10px;">
-        <div>Planet: ${planet.name}</div>
-
-        </div>
-    `;
-        console.log(planet.name);
-      });
-      rsp += `
-  <div style="padding: 10px; margin-top: 10px;">
-    <button id="fetchBtnPlanetNext"
-      class="btn btn-primary" data-page="${page}">Next</button>
-  
-
-    
-    
-  </div>
-`;
-
-      personBox.innerHTML = rsp;
-    });
-}
-
-function fetchStarShips(page) {
-  fetch(`https://swapi.dev/api/starships/?page=${page}`)
-    .then((res) => res.json())
-    .then((results) => {
-      const button = document.getElementById("fetchBtnStarships");
-      const url = results.next;
-
-      const urlObj = new URL(url);
-
-      const page = urlObj.searchParams.get("page");
-
-      button.setAttribute("data-page", page);
-
-      const allStarShips = results.results;
-      let rsp = "";
-      const personBox = document.querySelector("#personBox");
-      allStarShips.forEach(function (starship) {
-        rsp += `
-    <div style="padding: 10px; margin-top: 10px;">
-      <div>StarShips: ${starship.name}</div>
-
-      </div>
-  `;
-        console.log(starship.name);
-      });
-      rsp += `
-<div style="padding: 10px; margin-top: 10px;">
-  <button id="fetchBtnStarShipsNext"
-    class="btn btn-primary" data-page="${page}">Next</button>
-
-
-  
-  
-</div>
-`;
-
-      personBox.innerHTML = rsp;
+      entityBox.innerHTML = rsp;
     });
 }
 
 document
-  .querySelector("#fetchBtnPlanets")
+  .querySelector("#fetchBtn_planets")
   .addEventListener("click", (event) => {
-    const page = event.target.getAttribute("data-page");
-    fetchPlanet(page);
+    const entity = event.target.getAttribute("data-entity");
+    fetchEntity(entity);
   });
 document
-  .querySelector("#fetchBtnStarships")
+  .querySelector("#fetchBtn_starships")
   .addEventListener("click", (event) => {
-    const page = event.target.getAttribute("data-page");
-    fetchStarShips(page);
+    const entity = event.target.getAttribute("data-entity");
+    fetchEntity(entity);
   });

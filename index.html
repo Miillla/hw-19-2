@@ -13,22 +13,30 @@
   </head>
   <body>
     <div class="d-flex justify-content-center mt-2 gap-4">
-      <button id="fetchBtnPerson" class="btn btn-primary" data-page="1">
+      <button id="fetchBtn_people" class="btn btn-primary" data-entity="people">
         Person
       </button>
 
-      <button id="fetchBtnPlanets" class="btn btn-primary" data-page="1">
+      <button
+        id="fetchBtn_planets"
+        class="btn btn-primary"
+        data-entity="planets"
+      >
         Planets
       </button>
 
-      <button id="fetchBtnStarships" class="btn btn-primary" data-page="1">
+      <button
+        id="fetchBtn_starships"
+        class="btn btn-primary"
+        data-entity="starships"
+      >
         Transport
       </button>
     </div>
     <div class="content py-3">
       <div
         class="flex-column d-flex flex-md-column align-items-center pb-3 mb-4"
-        id="personBox"
+        id="entityBox"
       ></div>
     </div>
     <script
